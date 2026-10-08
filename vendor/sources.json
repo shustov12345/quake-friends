@@ -1,0 +1,30 @@
+{
+  "clientCommit": "301663bb60e292ee011bb0520ac22b5d5eaeab55",
+  "serverCommit": "977b188e05b239b6c48d7ecda9d04e9ca03f1578",
+  "files": [
+    {
+      "file": "vendor/ioquake3.original.js",
+      "url": "https://raw.githubusercontent.com/mcftira/quakejs/301663bb60e292ee011bb0520ac22b5d5eaeab55/ioquake3.js",
+      "bytes": 4054967,
+      "sha256": "5d41932bcfe7950d353ac956db69a9b41c55dea5d46702bf8cfe908a74846b6f"
+    },
+    {
+      "file": "vendor/ioq3ded.original.cjs",
+      "url": "https://raw.githubusercontent.com/inolen/quakejs/977b188e05b239b6c48d7ecda9d04e9ca03f1578/build/ioq3ded.js",
+      "bytes": 1805781,
+      "sha256": "6904e3df531f47a50877c6e4fceab7256de7d5c01c3fb62559302879e51ccf3a"
+    },
+    {
+      "file": "public/assets/857908472-linuxq3ademo-1.11-6.x86.gz.sh",
+      "url": "https://raw.githubusercontent.com/mcftira/quakejs/301663bb60e292ee011bb0520ac22b5d5eaeab55/assets/857908472-linuxq3ademo-1.11-6.x86.gz.sh",
+      "bytes": 49289300,
+      "sha256": "64dee3f69b6e792d1da4fe0ac98fedc7eb1e37ea1027fb609a9fadd06150a4ec"
+    },
+    {
+      "file": "public/assets/296843703-linuxq3apoint-1.32b-3.x86.run",
+      "url": "https://raw.githubusercontent.com/mcftira/quakejs/301663bb60e292ee011bb0520ac22b5d5eaeab55/assets/296843703-linuxq3apoint-1.32b-3.x86.run",
+      "bytes": 30923961,
+      "sha256": "c36132c5556b35e01950f1e9c646235033a5130f87ad776ba2bc7becf4f4f186"
+    }
+  ]
+}

@@ -1,0 +1,24 @@
+<!doctype html>
+<html lang="ru">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Пульт арены — Пожарный выход</title>
+<meta name="robots" content="noindex,nofollow">
+<link rel="icon" href="/favicon.svg" type="image/svg+xml">
+<link rel="stylesheet" href="/style.css">
+<link rel="stylesheet" href="/admin.css">
+</head>
+<body>
+<main class="admin-shell">
+<header><a class="brand" href="/"><span class="brand-mark">III</span><span>ПОЖАРНЫЙ <b>ВЫХОД</b></span></a><a class="back-link" href="/">← В комнату</a></header>
+<div class="admin-layout">
+<section class="admin-intro"><span class="eyebrow">ПУЛЬТ КОМНАТЫ / ТОЛЬКО ДЛЯ СВОИХ</span><h1>ВЫБРАТЬ<br><em>АРЕНУ.</em></h1><p>Паша выдыхает, админ берёт на себя тяжёлую работу: решить, где сегодня всех подорвёт ракетой.</p><div class="live-box"><span class="eyebrow">СЕЙЧАС НА СЕРВЕРЕ</span><strong id="current-match">Проверяем матч…</strong><span id="player-count">Игроки: —</span><span id="server-state">Состояние: —</span></div></section>
+<section class="admin-panel">
+<form id="login-form"><span class="eyebrow">01 / ВХОД</span><h2>Админский пароль</h2><label for="admin-password">Пароль администратора</label><input id="admin-password" type="password" autocomplete="current-password" required placeholder="Не пароль комнаты"><button class="primary" type="submit">ВОЙТИ В ПУЛЬТ <span aria-hidden="true">↗</span></button><p id="login-message" class="form-message" role="status" aria-live="polite"></p></form>
+<form id="settings-form" hidden><div class="settings-top"><span class="eyebrow">02 / НАСТРОЙКИ МАТЧА</span><button id="logout" type="button">Выйти</button></div><h2>Новая катка</h2><div class="form-grid"><div class="full"><label for="mode">Режим</label><select id="mode" required></select></div><div class="full"><label for="map">Карта</label><select id="map" required></select><small id="map-count"></small></div><div><label for="max-players">Игроков, максимум</label><input id="max-players" type="number" min="2" max="12" step="1" required></div><div><label for="time-limit">Время, минут</label><input id="time-limit" type="number" min="1" max="120" step="1" required></div><div class="full"><label for="frag-limit" id="limit-label">Лимит фрагов</label><input id="frag-limit" type="number" min="1" max="100" step="1" required></div></div><p class="restart-note">При применении текущий матч завершится. Игроки смогут сразу зайти снова с главной страницы. Пароль комнаты не изменится.</p><button id="apply-button" class="primary" type="submit">ПРИМЕНИТЬ И ПЕРЕЗАПУСТИТЬ <span aria-hidden="true">↗</span></button><p id="settings-message" class="form-message" role="status" aria-live="polite"></p></form>
+</section></div>
+<footer><span>WR подождёт. Панель подождёт тоже, если Чарси опять ничего не принесла.</span><a href="/">Вернуться к игре ↗</a></footer>
+</main>
+<script src="/admin.js"></script>
+</body></html>

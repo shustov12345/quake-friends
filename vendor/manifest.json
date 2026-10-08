@@ -1,0 +1,17 @@
+[
+  {
+    "name": "linuxq3ademo-1.11-6.x86.gz.sh",
+    "compressed": 49292185,
+    "checksum": 857908472
+  },
+  {
+    "name": "linuxq3apoint-1.32b-3.x86.run",
+    "compressed": 30914975,
+    "checksum": 296843703
+  },
+  {
+    "name": "baseq3/pak9-office.pk3",
+    "compressed": 1112729,
+    "checksum": 325638897
+  }
+]

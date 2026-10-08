@@ -1,0 +1,25 @@
+[Unit]
+Description=Private browser Quake III room
+After=network-online.target
+Wants=network-online.target
+
+[Service]
+Type=simple
+User=quakefriends
+Group=quakefriends
+WorkingDirectory=/opt/quake-friends
+Environment=HOST=127.0.0.1
+Environment=PORT=8088
+Environment=GAME_PORT=27960
+ExecStart=/opt/node24/bin/node /opt/quake-friends/server.mjs
+Restart=always
+RestartSec=3
+NoNewPrivileges=true
+PrivateTmp=true
+ProtectHome=true
+ProtectSystem=strict
+ReadWritePaths=/opt/quake-friends/runtime /opt/quake-friends/base/baseq3
+RestrictAddressFamilies=AF_INET AF_INET6 AF_UNIX
+
+[Install]
+WantedBy=multi-user.target

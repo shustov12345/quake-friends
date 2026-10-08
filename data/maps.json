@@ -1,0 +1,55 @@
+[
+  {
+    "id": "pro-q3tourney4",
+    "title": "Vertical Vengeance II",
+    "modes": [
+      "ffa",
+      "duel",
+      "tdm"
+    ],
+    "group": "extra"
+  },
+  {
+    "id": "pro-q3dm6",
+    "title": "The Campgrounds II",
+    "modes": [
+      "ffa",
+      "duel",
+      "tdm"
+    ],
+    "group": "extra"
+  },
+  {
+    "id": "ztn3tourney1",
+    "title": "Blood Run Tournament",
+    "modes": [
+      "ffa",
+      "duel"
+    ],
+    "group": "extra"
+  },
+  {
+    "id": "q3dm17",
+    "title": "The Longest Yard",
+    "modes": [
+      "ffa"
+    ],
+    "group": "original"
+  },
+  {
+    "id": "q3dm13",
+    "title": "Lost World",
+    "modes": [
+      "ffa"
+    ],
+    "group": "original"
+  },
+  {
+    "id": "q3dm19",
+    "title": "Apocalypse Void",
+    "modes": [
+      "ffa"
+    ],
+    "group": "original"
+  }
+]

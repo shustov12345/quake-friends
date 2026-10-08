@@ -1,0 +1,19 @@
+{
+  "name": "quake-friends",
+  "version": "1.0.0",
+  "private": true,
+  "type": "module",
+  "description": "Private browser Quake III demo server for friends",
+  "scripts": {
+    "setup": "node tools/fetch-upstream.mjs && node tools/prepare.mjs",
+    "start": "node server.mjs",
+    "test": "node --test test/security.test.mjs test/match.test.mjs",
+    "full:import": "node tools/import-full.mjs"
+  },
+  "engines": {
+    "node": ">=22.15"
+  },
+  "dependencies": {
+    "ws": "8.22.0"
+  }
+}

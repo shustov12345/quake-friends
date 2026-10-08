@@ -1,0 +1,2 @@
+const fs=require('fs'); const path=require('path');const {chromium}=require('playwright');
+(async()=>{const browser=await chromium.launch({channel:'msedge',headless:true}); const page=await browser.newPage({viewport:{width:1200,height:810},deviceScaleFactor:.7});await page.goto('http://localhost:8088/'); const data=await page.screenshot({type:'jpeg',quality:45}); console.log(data.toString('base64')); await browser.close();})();
