@@ -4,7 +4,7 @@ function notice(id,text,error=false){const target=$(id);target.textContent=text;
 async function request(path,options={}){
  const response=await fetch(path,{cache:'no-store',...options});
  let data;try{data=await response.json();}catch{data={error:'Нет ответа от сервера.'};}
- if(!response.ok)throw Object.assign(Error(data.error||'Ошибка запроса.'),{status:response.status});
+ if(!response.ok)throw Object.assign(Error(data.error||'Ошибка запроса.'),{status:response.status,requiresConfirmation:data.requiresConfirmation,players:data.players});
  return data;
 }
 function fillModes(modes){$('mode').replaceChildren(...modes.map(item=>new Option(item.label,item.id)));}
@@ -69,9 +69,19 @@ $('settings-form').addEventListener('submit',async event=>{
  const next={map:$('map').value,mode:$('mode').value,maxPlayers:Number($('max-players').value),timeLimit:Number($('time-limit').value),fragLimit:Number($('frag-limit').value)};
  $('apply-button').disabled=true;
  try{
-  await request('/api/admin/apply',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(next)});
+  const apply=confirmRestart=>request('/api/admin/apply',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({...next,confirmRestart})});
+  let result;
+  try{result=await apply(false);}catch(error){
+   if(!error.requiresConfirmation)throw error;
+   if(!confirm('Сейчас в игре '+error.players+' чел. Перезапуск отключит всех. Продолжить?')){
+    notice('settings-message','Перезапуск отменён.');return;
+   }
+   result=await apply(true);
+  }
+  if(result.unchanged){notice('settings-message','Настройки не изменились.');return;}
   applying=true;notice('settings-message','Настройки сохранены. Перезапускаем матч…');
- }catch(error){$('apply-button').disabled=false;notice('settings-message',error.message,true);}
+ }catch(error){notice('settings-message',error.message,true);}
+ finally{if(!applying)$('apply-button').disabled=false;}
 });
 $('logout').addEventListener('click',async()=>{await request('/api/admin/logout',{method:'POST'});location.reload();});
 status(true);

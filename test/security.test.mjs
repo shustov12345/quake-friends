@@ -78,3 +78,26 @@ test('private files never become available after login',async()=>{
   const response=await fetch(base+path,{headers:{Cookie:cookie}});assert.equal(response.status,404,path);
  }
 });
+
+test('admin cannot accidentally restart a live match',async()=>{
+ const login=await fetch(base+'/api/admin/login',{method:'POST',headers:{Origin:base,'Content-Type':'application/json'},body:JSON.stringify({password:adminPassword})});
+ assert.equal(login.status,200);
+ const adminCookie=login.headers.get('set-cookie').split(';')[0];
+ const status=await (await fetch(base+'/api/admin/status',{headers:{Cookie:adminCookie}})).json();
+ const apply=body=>fetch(base+'/api/admin/apply',{method:'POST',headers:{Origin:base,Cookie:adminCookie,'Content-Type':'application/json'},body:JSON.stringify(body)});
+ const unchanged=await apply(status.match);
+ assert.equal(unchanged.status,200);
+ assert.equal((await unchanged.json()).unchanged,true);
+
+ const ws=new WebSocket(base.replace('http:','ws:')+'/game',['binary'],{headers:{Origin:base,Cookie:cookie}});
+ await new Promise((resolve,reject)=>{ws.once('open',resolve);ws.once('error',reject);});
+ try{
+  const changed={...status.match,fragLimit:status.match.fragLimit===100?99:status.match.fragLimit+1};
+  const refused=await apply(changed);
+  assert.equal(refused.status,409);
+  assert.equal((await refused.json()).requiresConfirmation,true);
+  assert.equal(ws.readyState,WebSocket.OPEN);
+  const after=await (await fetch(base+'/api/admin/status',{headers:{Cookie:adminCookie}})).json();
+  assert.deepEqual(after.match,status.match);
+ }finally{ws.close();}
+});

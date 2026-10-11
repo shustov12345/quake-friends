@@ -4,6 +4,9 @@ import { readFile, writeFile, mkdir, stat, rename } from 'node:fs/promises';
 import { randomBytes, scryptSync, timingSafeEqual } from 'node:crypto';
 import { spawn } from 'node:child_process';
 import { resolve, extname, sep } from 'node:path';
+import { Transform } from 'node:stream';
+import { pipeline } from 'node:stream/promises';
+import { performance } from 'node:perf_hooks';
 import { WebSocket, WebSocketServer } from 'ws';
 import { validateMatch, serverConfig, gameModes } from './match.mjs';
 
@@ -15,6 +18,10 @@ const defaultMatch=validateMatch({map:gameContent.defaultMap,mode:'ffa',maxPlaye
 const port=Number(process.env.PORT || 8088);
 const gamePort=Number(process.env.GAME_PORT || 27960);
 const host=process.env.HOST || '127.0.0.1';
+const assetBandwidthMiBps=Number(process.env.ASSET_BANDWIDTH_MIBPS || 8);
+if(!Number.isFinite(assetBandwidthMiBps)||assetBandwidthMiBps<=0)throw Error('ASSET_BANDWIDTH_MIBPS must be positive');
+const assetBytesPerSecond=assetBandwidthMiBps*1024*1024;
+let nextAssetChunkAt=0;
 const sessions=new Map(), attempts=new Map(), adminSessions=new Map(), adminAttempts=new Map();
 const sessionMs=12*60*60*1000;
 await mkdir(resolve(root,'runtime'),{recursive:true});
@@ -56,7 +63,17 @@ async function serve(req,res,file){
   const info=await stat(absolute);if(!info.isFile())throw Error('Not a file');
   res.writeHead(200,{'Content-Type':mime[extname(file)]||'application/octet-stream','Content-Length':info.size,'Cache-Control':file==='assets/manifest.json'?'no-store':file.startsWith('assets/')?'private, max-age=86400':'no-cache'});
   if(req.method==='HEAD')return res.end();
-  createReadStream(absolute).on('error',()=>res.destroy()).pipe(res);
+  const stream=createReadStream(absolute);
+  if(file.endsWith('.pk3')){
+   const limiter=new Transform({transform(chunk,encoding,done){
+    const now=performance.now();
+    nextAssetChunkAt=Math.max(now-100,nextAssetChunkAt)+chunk.length/assetBytesPerSecond*1000;
+    const delay=nextAssetChunkAt-now;
+    if(delay<1)done(null,chunk);
+    else setTimeout(done,delay,null,chunk);
+   }});
+   void pipeline(stream,limiter,res).catch(()=>{});
+  }else void pipeline(stream,res).catch(()=>{});
  }catch{return json(res,404,{error:'Not found'});}
 }
 const app=http.createServer(async(req,res)=>{
@@ -98,8 +115,11 @@ const app=http.createServer(async(req,res)=>{
   if(url.pathname==='/api/admin/apply'&&req.method==='POST'){
    if(!sameOrigin(req)||!adminSession(req))return json(res,403,{error:'Доступ запрещён.'});
    if(restarting)return json(res,409,{error:'Матч уже перезапускается.'});
-   let next;
-   try{next=validateMatch(await body(req),maps);}catch(error){return json(res,400,{error:error.message});}
+   let next,data;
+   try{data=await body(req);next=validateMatch(data,maps);}catch(error){return json(res,400,{error:error.message});}
+   if(Object.entries(next).every(([key,value])=>match[key]===value))return json(res,200,{ok:true,unchanged:true,message:'Настройки не изменились.'});
+   const activePlayers=gateway.clients.size;
+   if(activePlayers>0&&data.confirmRestart!==true)return json(res,409,{error:'Перезапуск отключит всех игроков.',players:activePlayers,requiresConfirmation:true});
    restarting=true;
    try{
     const temp=matchFile+'.next';
